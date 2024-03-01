@@ -1,0 +1,99 @@
+html, body {
+    margin: 0 auto;
+    padding: 0;
+    align-items: center;
+    font-family: 'Josefin Sans', sans-serif;
+    justify-content: center;
+    background-color: #1B1924;
+    color: #28A9F1;
+    user-select: none;
+}
+
+img {
+    width: 150px;
+    margin: 0 auto;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    margin: 30px auto; 
+    margin-bottom: 0px;   
+    text-align: center;
+}
+
+textarea {
+    border-radius: 6px;
+    background-color: #444059;
+    margin: 10px, auto;
+    color: #8F8F8F;
+    height: 118px;
+    resize: none;
+    border:none;
+    padding: 5px;
+    font-family: 'Inter';
+    
+}
+
+button {
+    padding: 15px;
+    margin: 5px 0px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Josefin Sans';
+    font-size: large;
+    font-weight: bold;
+    background-color: #28A9F1;
+}
+
+.likeEl {
+    background: none;
+    padding: 0px;
+    margin: 0px
+}
+
+#endorsement-container {
+    display: flex;
+    font-family: 'Inter';
+    flex-direction: column;
+    max-width: 320px;
+    margin: 0px auto;    
+    text-align: center;
+}
+h4{
+    margin: 0px;
+}
+h3{
+    color: white;
+}
+
+.fromToFields {
+    display: flex;
+    max-width: 320px;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5px;
+    margin-top: 4px;
+}
+input {
+    max-width: 156px;
+    text-align: center;
+    background-color: #444059;
+    color: #8F8F8F;
+    border: none;
+    border-radius: 4px;
+    margin: 6px 0;
+    padding: 10px 0;
+    font-family: 'Inter';
+}
+
+#endorse-box{
+    background-color: white;
+    color: black;
+    justify-content: left;
+    text-align: left;
+    padding: 8px;
+    margin: 6px 0px;
+    border-radius: 3px;
+}
