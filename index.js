@@ -18,44 +18,28 @@ let fromEl = document.getElementById("from-el")
 let toEl = document.getElementById("to-el")
 let endorsementContainerEl = document.getElementById("endorsement-container")
 
-//ocalstorage Init
+//localstorage Init
 let likedIDsByApp = []
 if (JSON.parse(localStorage.getItem("likedIDs"))) {
     likedIDsByApp = JSON.parse(localStorage.getItem("likedIDs"))
-    
 }
-
 
 //listen for clicks on Publish button
 publishBtnEl.addEventListener('click', addEndorsement)
 
-//listen for clicks on like buttons
+//Listen for clicks on all like buttons
 document.addEventListener("click", function(e){
-    const target = e.target.closest(".likeEl"); // Or any other selector.
-    let currentLikeBtn = target.id
+    const target = e.target.closest(".likeEl");
+    let currentLikeBtn = target.id  // id in HTML of each endorsement is set to the unique DB key for that entry
     if(target){
       let exactLocationOfItemInDB = ref(database, `endorsementList/${currentLikeBtn}`)
       
-      // DB transaction
+      // DB transaction to update like count on targetted endorsement
       runTransaction(exactLocationOfItemInDB, (endorseObject) => {
-            
-            // if(endorseObject) {
-            //     if (endorseObject.likeCount) {
-            //         endorseObject.likeCount--
-                    
-            //     } else {
-            //         endorseObject.likeCount++
-            //         if (!endorseObject.likeCount) {
-            //             endorseObject.likeCount = {}
-            //         }
-                
-            //     }
-            // }
             if (validateLike(currentLikeBtn)) {
                 endorseObject.likeCount--
                 let indexOfLikedEndorsement = likedIDsByApp.indexOf(currentLikeBtn)
                 likedIDsByApp.splice(indexOfLikedEndorsement, 1)
-                console.log("CANNY LIKE ANYMORE")
             } else {
                 endorseObject.likeCount++
                 likedIDsByApp.push(currentLikeBtn)
@@ -66,6 +50,7 @@ document.addEventListener("click", function(e){
     }
   });
    
+// Checks if this device has already liked an endorsement or not
 function validateLike(endorsementID) {
     if (likedIDsByApp) {
         return likedIDsByApp.includes(endorsementID)
@@ -74,6 +59,7 @@ function validateLike(endorsementID) {
     }
 }
 
+//Adds endorsements to the DB
 function addEndorsement() {
 
     let endorsementComment = inputFieldEl.value
@@ -88,7 +74,7 @@ function addEndorsement() {
             from: fromVal, 
             to: toVal, 
             likeCount: 0,
-            timeStamp: Date.now()
+            timeStamp: Date.now()   // used to faciliate reverse ordering 
             }
             
             push(endorsementsInDB, newEntryArray)
@@ -96,26 +82,30 @@ function addEndorsement() {
     clearInputField()
 }
 
+// Clears text from input fields to initialise after publishing
 function clearInputField(){
     inputFieldEl.value = ""
     fromEl.value = ""
     toEl.value = ""
 }
 
+// Clears HTML for endorsements to allow re-writing
 function clearEndorsementContainer() {
     endorsementContainerEl.innerHTML = ""
 }
 
 function appendEndorsements(endorsement) {
-    let newEl = document.createElement("div")
-    newEl.setAttribute("id", "endorse-box")
 
+    // Setting up variables for new endorsement
     let endorseCommentValue = endorsement[1].comment
     let toValue = endorsement[1].to
     let fromValue = endorsement[1].from
     let likeCount = endorsement[1].likeCount
     let endorseID = endorsement[0]
-
+    
+    // Creating HTML for new endorsement box
+    let newEl = document.createElement("div")
+    newEl.setAttribute("id", "endorse-box")
     newEl.innerHTML = `
     <h4>To ${toValue}</h4>
     <p>${endorseCommentValue}</p>
@@ -125,9 +115,8 @@ function appendEndorsements(endorsement) {
     endorsementContainerEl.append(newEl)
 }
 
-//if  any change to the DB happens
+//Triggered on any DB changes
 onValue(endorsementsInDB, function(snapshot){
-//grab all entries
     clearEndorsementContainer()
     let endorsementsArray = Object.entries(snapshot.val()).reverse()
     for (let i=0; i < endorsementsArray.length ; i++){
